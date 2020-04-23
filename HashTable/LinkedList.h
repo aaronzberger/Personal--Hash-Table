@@ -15,7 +15,7 @@ public:
     bool add(node &n);
     bool remove(node &n);
     
-    bool contains(node &n);
+    bool contains(const node &n);
 };
 
 #endif // _LINKEDLIST_H_

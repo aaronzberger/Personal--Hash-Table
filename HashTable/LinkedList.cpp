@@ -41,7 +41,7 @@ bool LinkedList::remove(node &n) {
     return false;
 }
 
-bool LinkedList::contains(node &n) {
+bool LinkedList::contains(const node &n) {
     if(head == nullptr)
         return false;
     node *traverser = head;
