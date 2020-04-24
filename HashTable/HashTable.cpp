@@ -10,17 +10,20 @@ HashTable::~HashTable() {
     delete [] arr;
 }
 
-bool HashTable::contains(const node &n) {
+bool HashTable::contains(const node &n) const {
     return arr[hash(n)].contains(n);
 }
-    
+
+//Called from the user in order to add elements to the Hash Table
 void HashTable::add(node &n) {
-    if(elementsBeingUsed > (table_size * max_table_load))
+    if(elementsBeingUsed >= (table_size * max_table_load))
         doubleCapacity();
     if(arr[hash(n)].add(n))
         elementsBeingUsed++;
 }
 
+//Called from the doubleCapacity() method to efficiently rehash
+//By simply moving the pointer to a new LinkedList, no malloc is required.
 void HashTable::add(node *ptr) {
     if(arr[hash(*ptr)].add(ptr))
         elementsBeingUsed++;
@@ -31,7 +34,7 @@ void HashTable::remove(node &n) {
         elementsBeingUsed--;
 }
 
-int HashTable::hash(const node &n) {
+int HashTable::hash(const node &n) const {
     int result = n.age;
     if(n.name != "") {
         result += static_cast<int>((n.name)[0]);
@@ -49,5 +52,5 @@ void HashTable::doubleCapacity() {
         while(!oldArr[i].isEmpty())
             add(oldArr[i].remove());
     }
-    delete [] arr;
+    delete [] oldArr;
 }

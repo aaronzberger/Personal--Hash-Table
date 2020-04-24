@@ -19,14 +19,22 @@ int main() {
     hashTable.add(n1);
     hashTable.add(n2);
     hashTable.add(n3);
-    
-    hashTable.add(n1);
-    
+        
     std::cout << std::boolalpha;
     std::cout << hashTable.contains(n1) << std::endl; //true
     std::cout << hashTable.contains(n2) << std::endl; //true
     std::cout << hashTable.contains(n4) << std::endl; //false
-
+    std::cout << hashTable.contains(n1) << std::endl; //true
+    std::cout << hashTable.contains(n7) << std::endl; //false
+    
+    hashTable.remove(n1);
+    std::cout << hashTable.contains(n1) << std::endl; //false
+    
+    hashTable.add(n4);
+    hashTable.add(n5);
+    hashTable.add(n6);
+    hashTable.add(n2);
+    hashTable.add(n7);
 
     std::cout << "=============================" << std::endl;
     return 0;

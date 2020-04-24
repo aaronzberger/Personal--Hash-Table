@@ -10,13 +10,13 @@ private:
     static constexpr const double max_table_load = 0.75;
     int elementsBeingUsed;
     int table_size;
-    int hash(const node &n);
+    int hash(const node &n) const;
     void doubleCapacity();
 public:
     HashTable(int size = def_table_size);
     ~HashTable();
     
-    bool contains(const node &n);
+    bool contains(const node &n) const;
     
     void add(node &n);
     void add(node *ptr);

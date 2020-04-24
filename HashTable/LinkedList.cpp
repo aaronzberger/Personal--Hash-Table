@@ -30,6 +30,8 @@ bool LinkedList::add(node &n) {
     return false;
 }
 
+//Used when rehasing elements.
+//Inserts the pointer into the array with no malloc.
 bool LinkedList::add(node *ptr) {
     if(head == nullptr) {
         ptr->next = nullptr;
@@ -44,21 +46,27 @@ bool LinkedList::add(node *ptr) {
 //Returns whether this cell of the array (this LinkedList) is now empty.
 //Used to calculate load factor for possible resizing of the hash table.
 bool LinkedList::remove(node &n) {
+    if(*head == n) {
+        node *oldHead = head;
+        head = head->next;
+        delete oldHead;
+        return true;
+    }
     node *traverser = head;
     while(*(traverser->next) != n) {
-        if(traverser == nullptr)
+        if(traverser->next == nullptr)
             throw std::runtime_error("traverser reached end of linked list in removeNode()");
         traverser = traverser->next;
     }
     node *deletion = traverser->next;
-    traverser->next = traverser->next->next;
+    traverser->next = deletion->next;
     delete deletion;
     if(head == nullptr)
         return true;
     return false;
 }
 
-bool LinkedList::contains(const node &n) {
+bool LinkedList::contains(const node &n) const {
     if(head == nullptr)
         return false;
     node *traverser = head;

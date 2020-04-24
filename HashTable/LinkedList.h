@@ -17,7 +17,7 @@ public:
     
     node* remove();
     
-    bool contains(const node &n);
+    bool contains(const node &n) const;
     
     bool isEmpty() { return (head == nullptr); }
 };
