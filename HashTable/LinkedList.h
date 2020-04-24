@@ -5,7 +5,8 @@
 #include <iostream>
 
 class LinkedList {
-    friend bool operator==(const node &rhs, const node &lhs);
+    friend bool operator==(const node &lhs, const node &rhs);
+    friend bool operator!=(const node &lhs, const node &rhs)
 private:
     node *head;
 public:

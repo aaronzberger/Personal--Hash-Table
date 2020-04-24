@@ -27,8 +27,10 @@ void HashTable::remove(node &n) {
 
 int HashTable::hash(const node &n) {
     int result = n.age;
-    result += static_cast<int>((n.name)[0]);
-    result += static_cast<int>((n.name)[1]);
+    if(n.name != "") {
+        result += static_cast<int>((n.name)[0]);
+        result += static_cast<int>((n.name)[(n.name).length() - 1]);
+    }
     return (result % table_size);
 }
 
