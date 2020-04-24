@@ -19,6 +19,7 @@ public:
     bool contains(const node &n);
     
     void add(node &n);
+    void add(node *ptr);
     void remove(node &n);
 };
 

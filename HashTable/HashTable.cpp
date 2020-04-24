@@ -6,6 +6,7 @@ HashTable::HashTable(int size)
 }
 
 HashTable::~HashTable() {
+    //TODO: Delete each LinkedList in the array
     delete [] arr;
 }
 
@@ -17,6 +18,11 @@ void HashTable::add(node &n) {
     if(elementsBeingUsed > (table_size * max_table_load))
         doubleCapacity();
     if(arr[hash(n)].add(n))
+        elementsBeingUsed++;
+}
+
+void HashTable::add(node *ptr) {
+    if(arr[hash(*ptr)].add(ptr))
         elementsBeingUsed++;
 }
 
@@ -35,9 +41,13 @@ int HashTable::hash(const node &n) {
 }
 
 void HashTable::doubleCapacity() {
-    LinkedList *newArr = new LinkedList[table_size * 2];
-    for(int i{0}; i < table_size; i++)
-        newArr[i] = arr[i];
+    elementsBeingUsed = 0;
     table_size *= 2;
+    LinkedList *oldArr = arr;
+    arr = new LinkedList[table_size];
+    for(int i{0}; i < (table_size / 2); i++) {
+        while(!oldArr[i].isEmpty())
+            add(oldArr[i].remove());
+    }
     delete [] arr;
 }

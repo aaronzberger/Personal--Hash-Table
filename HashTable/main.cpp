@@ -14,7 +14,7 @@ int main() {
     node n6; n6.name = "Node n6"; n6.age = 60;
     node n7; n7.name = "Node n7"; n7.age = 70;
     
-    HashTable hashTable;
+    HashTable hashTable{2};
     
     hashTable.add(n1);
     hashTable.add(n2);

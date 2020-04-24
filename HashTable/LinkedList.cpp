@@ -8,7 +8,7 @@ LinkedList::LinkedList()
 
 
 LinkedList::~LinkedList() {
-    node *newHead;
+    node *newHead = head;
     while(newHead != nullptr) {
         newHead = head->next;
         delete head;
@@ -27,6 +27,17 @@ bool LinkedList::add(node &n) {
     }
     newNode->next = head;
     head = newNode;
+    return false;
+}
+
+bool LinkedList::add(node *ptr) {
+    if(head == nullptr) {
+        ptr->next = nullptr;
+        head = ptr;
+        return true;
+    }
+    ptr->next = head;
+    head = ptr;
     return false;
 }
 
@@ -58,6 +69,14 @@ bool LinkedList::contains(const node &n) {
         traverser = traverser->next;
     }
     return false;
+}
+
+node* LinkedList::remove() {
+    if(head == nullptr)
+        throw std::runtime_error("tried to remove an element when the LinkedList is empty");
+    node *oldHead = head;
+    head = head->next;
+    return oldHead;
 }
 
 bool operator!=(const node &lhs, const node &rhs) {

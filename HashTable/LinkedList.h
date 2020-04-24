@@ -5,18 +5,21 @@
 #include <iostream>
 
 class LinkedList {
-    friend bool operator==(const node &lhs, const node &rhs);
-    friend bool operator!=(const node &lhs, const node &rhs)
 private:
     node *head;
 public:
     LinkedList();
     ~LinkedList();
-    
+        
     bool add(node &n);
+    bool add(node *ptr);
     bool remove(node &n);
     
+    node* remove();
+    
     bool contains(const node &n);
+    
+    bool isEmpty() { return (head == nullptr); }
 };
 
 #endif // _LINKEDLIST_H_
