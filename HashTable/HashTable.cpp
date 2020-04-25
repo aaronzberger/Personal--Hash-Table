@@ -11,26 +11,22 @@ HashTable::~HashTable() {
 }
 
 bool HashTable::contains(const node &n) const {
-    return arr[hash(n)].contains(n);
+    const int idx {hash(n)};
+    return arr[idx].contains(n);
 }
 
 //Called from the user in order to add elements to the Hash Table
 void HashTable::add(node &n) {
     if(elementsBeingUsed >= (table_size * max_table_load))
         doubleCapacity();
-    if(arr[hash(n)].add(n))
-        elementsBeingUsed++;
-}
-
-//Called from the doubleCapacity() method to efficiently rehash
-//By simply moving the pointer to a new LinkedList, no malloc is required.
-void HashTable::add(node *ptr) {
-    if(arr[hash(*ptr)].add(ptr))
+    const int idx {hash(n)};
+    if(arr[idx].add(n))
         elementsBeingUsed++;
 }
 
 void HashTable::remove(node &n) {
-    if(arr[hash(n)].remove(n))
+    const int idx {hash(n)};
+    if(arr[idx].remove(n))
         elementsBeingUsed--;
 }
 
@@ -49,8 +45,12 @@ void HashTable::doubleCapacity() {
     LinkedList *oldArr = arr;
     arr = new LinkedList[table_size];
     for(int i{0}; i < (table_size / 2); i++) {
-        while(!oldArr[i].isEmpty())
-            add(oldArr[i].remove());
+        while(!oldArr[i].isEmpty()) {
+            node *oldPtr = oldArr[i].remove();
+            const int idx {hash(*oldPtr)};
+            if(arr[idx].add(oldPtr))
+                elementsBeingUsed++;
+        }
     }
     delete [] oldArr;
 }
