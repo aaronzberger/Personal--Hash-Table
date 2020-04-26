@@ -6,14 +6,15 @@
 class HashTable {
 private:
     LinkedList *arr;
-    static constexpr const int def_table_size = 10;
-    static constexpr const double max_table_load = 0.75;
+    static constexpr const int defTableSize = 10;
+    static constexpr const double maxTableLoad = 0.75;
+    bool allowDuplicates;
     int elementsBeingUsed;
     int tableSize;
-    int hash(const Node &n) const;
+    unsigned int hash(const Node &n) const;
     void doubleCapacity();
 public:
-    HashTable(int size = def_table_size);
+    HashTable(int size = defTableSize, bool allowDuplicates = true);
     ~HashTable();
     
     bool contains(const Node &n) const;

@@ -9,13 +9,14 @@ class LinkedListNode;
 class LinkedList {
 private:
     LinkedListNode *head;
+    bool add(LinkedListNode *ptr);
+    bool allowDuplicates;
 public:
-    LinkedList();
+    LinkedList(bool allowDuplicates = true);
     ~LinkedList();
         
     bool add(Node &n);
     bool add(Node *ptr);
-    bool add(LinkedListNode *ptr);
     bool remove(Node &n);
     
     Node* remove();
@@ -41,10 +42,8 @@ public:
     LinkedListNode(Node *ptr) 
         : n{ptr}, next{nullptr} {}
     ~LinkedListNode() {
-        std::cout << "LinkedListNode destructor" << std::endl;
+        //std::cout << "LinkedListNode destructor" << std::endl;
         delete n;
-        if(next != nullptr)
-            delete next;
     }
 };
 

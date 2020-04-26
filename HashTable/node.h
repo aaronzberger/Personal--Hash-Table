@@ -11,15 +11,15 @@ class Node {
 public:
     std::string name;
     int age;
-    int hash;
+    unsigned int hash;
     
     Node() {
-        int result = static_cast<int>(age * 1.75);
+        unsigned int result = static_cast<int>(age * 1.75);
         if(name != "") {
             result += static_cast<int>((name)[0]);
             result += static_cast<int>((name)[name.length() - 1]);
         }
-        hash = abs(result);
+        hash = result;
     }
 };
 

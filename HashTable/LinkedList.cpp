@@ -4,34 +4,40 @@
 #include "Node.h"
 #include "stdio.h"
 
-LinkedList::LinkedList() 
-    : head{nullptr} {}
+LinkedList::LinkedList(bool allowDuplicates) 
+    : head{nullptr}, allowDuplicates{allowDuplicates} {}
 
 
 LinkedList::~LinkedList() {
-    std::cout << "LinkedList destructor" << std::endl;
+    //std::cout << "LinkedList destructor" << std::endl;
     LinkedListNode *oldHead = head;
     while(oldHead != nullptr) {
         head = head->next;
         delete oldHead;
+        oldHead = head;
     }
 }
 
-//Returns whether this is the first time an element is being put into this index.
-//Used to calculate load factor for possible resizing of the hash table.
 bool LinkedList::add(Node &n) {
+    if(!allowDuplicates) {
+        if(contains(n))
+            return false;
+    }
     LinkedListNode *newNode = new LinkedListNode(n);
     return add(newNode);
 }
 
 //Usedd when rehashing by the Hash Table.
 bool LinkedList::add(Node *ptr) {
+    if(!allowDuplicates) {
+        if(contains(*ptr))
+            return false;
+    }
     LinkedListNode *newNode = new LinkedListNode(ptr);
     return add(newNode);
 }
 
-//Used when rehasing elements and by the other add function.
-//Inserts the pointer into the array with no new malloc.
+//Returns whether the element was actually added
 bool LinkedList::add(LinkedListNode *ptr) {
     if(head == nullptr) {
         ptr->next = nullptr;
@@ -40,11 +46,10 @@ bool LinkedList::add(LinkedListNode *ptr) {
     }
     ptr->next = head;
     head = ptr;
-    return false;
+    return true;
 }
 
-//Returns whether this cell of the Hash Table (this LinkedList) is now empty.
-//Used to calculate load factor for possible resizing of the hash table.
+//Returns whether the element was actually removed
 bool LinkedList::remove(Node &n) {
     if(head == nullptr)
         perror ("tried to remove an element from an empty LinkedList in remove()");
@@ -65,9 +70,7 @@ bool LinkedList::remove(Node &n) {
     LinkedListNode *deletion = traverser->next;
     traverser->next = deletion->next;
     delete deletion;
-    if(head == nullptr)
-        return true;
-    return false;
+    return true;
 }
 
 bool LinkedList::contains(const Node &n) const {
