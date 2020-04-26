@@ -1,52 +1,48 @@
 #include "HashTable.h"
+#include "LinkedList.h"
 
 HashTable::HashTable(int size) 
-    : elementsBeingUsed{0}, table_size{size} {
-    arr = new LinkedList[table_size];
+    : elementsBeingUsed{0}, tableSize{size} {
+    arr = new LinkedList[tableSize];
 }
 
 HashTable::~HashTable() {
-    //TODO: Delete each LinkedList in the array
+    std::cout << "HashTable destructor" << std::endl;
     delete [] arr;
 }
 
-bool HashTable::contains(const node &n) const {
+bool HashTable::contains(const Node &n) const {
     const int idx {hash(n)};
     return arr[idx].contains(n);
 }
 
-//Called from the user in order to add elements to the Hash Table
-void HashTable::add(node &n) {
-    if(elementsBeingUsed >= (table_size * max_table_load))
+void HashTable::add(Node &n) {
+    if(elementsBeingUsed >= (tableSize * max_table_load))
         doubleCapacity();
     const int idx {hash(n)};
     if(arr[idx].add(n))
         elementsBeingUsed++;
 }
 
-void HashTable::remove(node &n) {
+void HashTable::remove(Node &n) {
     const int idx {hash(n)};
     if(arr[idx].remove(n))
         elementsBeingUsed--;
 }
 
-int HashTable::hash(const node &n) const {
-    int result = n.age;
-    if(n.name != "") {
-        result += static_cast<int>((n.name)[0]);
-        result += static_cast<int>((n.name)[(n.name).length() - 1]);
-    }
-    return (result % table_size);
+int HashTable::hash(const Node &n) const {
+    int result {n.hash % tableSize};
+    return result;
 }
 
 void HashTable::doubleCapacity() {
     elementsBeingUsed = 0;
-    table_size *= 2;
+    tableSize *= 2;
     LinkedList *oldArr = arr;
-    arr = new LinkedList[table_size];
-    for(int i{0}; i < (table_size / 2); i++) {
+    arr = new LinkedList[tableSize];
+    for(int i{0}; i < (tableSize / 2); i++) {
         while(!oldArr[i].isEmpty()) {
-            node *oldPtr = oldArr[i].remove();
+            Node *oldPtr = oldArr[i].remove();
             const int idx {hash(*oldPtr)};
             if(arr[idx].add(oldPtr))
                 elementsBeingUsed++;

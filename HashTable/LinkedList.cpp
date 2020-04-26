@@ -1,38 +1,38 @@
 #include "LinkedList.h"
 #include <string>
 #include <iostream>
-#include "node.h"
+#include "Node.h"
+#include "stdio.h"
 
 LinkedList::LinkedList() 
     : head{nullptr} {}
 
 
 LinkedList::~LinkedList() {
-    node *newHead = head;
-    while(newHead != nullptr) {
-        newHead = head->next;
-        delete head;
-        head = newHead;
+    std::cout << "LinkedList destructor" << std::endl;
+    LinkedListNode *oldHead = head;
+    while(oldHead != nullptr) {
+        head = head->next;
+        delete oldHead;
     }
 }
 
 //Returns whether this is the first time an element is being put into this index.
 //Used to calculate load factor for possible resizing of the hash table.
-bool LinkedList::add(node &n) {
-    node *newNode = new node(n);
-    if(head == nullptr) {
-        newNode->next = nullptr;
-        head = newNode;
-        return true;
-    }
-    newNode->next = head;
-    head = newNode;
-    return false;
+bool LinkedList::add(Node &n) {
+    LinkedListNode *newNode = new LinkedListNode(n);
+    return add(newNode);
 }
 
-//Used when rehasing elements.
-//Inserts the pointer into the array with no malloc.
-bool LinkedList::add(node *ptr) {
+//Usedd when rehashing by the Hash Table.
+bool LinkedList::add(Node *ptr) {
+    LinkedListNode *newNode = new LinkedListNode(ptr);
+    return add(newNode);
+}
+
+//Used when rehasing elements and by the other add function.
+//Inserts the pointer into the array with no new malloc.
+bool LinkedList::add(LinkedListNode *ptr) {
     if(head == nullptr) {
         ptr->next = nullptr;
         head = ptr;
@@ -43,22 +43,26 @@ bool LinkedList::add(node *ptr) {
     return false;
 }
 
-//Returns whether this cell of the array (this LinkedList) is now empty.
+//Returns whether this cell of the Hash Table (this LinkedList) is now empty.
 //Used to calculate load factor for possible resizing of the hash table.
-bool LinkedList::remove(node &n) {
+bool LinkedList::remove(Node &n) {
+    if(head == nullptr)
+        perror ("tried to remove an element from an empty LinkedList in remove()");
+        //throw std::runtime_error("tried to remove an element from an empty LinkedList in remove()");
     if(*head == n) {
-        node *oldHead = head;
+        LinkedListNode *oldHead = head;
         head = head->next;
         delete oldHead;
         return true;
     }
-    node *traverser = head;
+    LinkedListNode *traverser = head;
     while(*(traverser->next) != n) {
         if(traverser->next == nullptr)
-            throw std::runtime_error("traverser reached end of linked list in removeNode()");
+            perror ("traverser reached end of linked list in removeNode()");
+            //throw std::runtime_error("traverser reached end of linked list in removeNode()");
         traverser = traverser->next;
     }
-    node *deletion = traverser->next;
+    LinkedListNode *deletion = traverser->next;
     traverser->next = deletion->next;
     delete deletion;
     if(head == nullptr)
@@ -66,10 +70,10 @@ bool LinkedList::remove(node &n) {
     return false;
 }
 
-bool LinkedList::contains(const node &n) const {
+bool LinkedList::contains(const Node &n) const {
     if(head == nullptr)
         return false;
-    node *traverser = head;
+    LinkedListNode *traverser = head;
     while(traverser != nullptr) {
         if(*traverser == n) {
             return true;
@@ -79,20 +83,26 @@ bool LinkedList::contains(const node &n) const {
     return false;
 }
 
-node* LinkedList::remove() {
+Node* LinkedList::remove() {
     if(head == nullptr)
-        throw std::runtime_error("tried to remove an element when the LinkedList is empty");
-    node *oldHead = head;
+        perror ("tried to remove an element when the LinkedList is empty");
+        //throw std::runtime_error("tried to remove an element when the LinkedList is empty");
+    LinkedListNode *oldHead = head;
     head = head->next;
-    return oldHead;
+    Node *toRemove = (*oldHead).n;
+    return toRemove;
 }
 
-bool operator!=(const node &lhs, const node &rhs) {
-    return (lhs.name != rhs.name ||
-            lhs.age != rhs.age);
+bool operator!=(const LinkedListNode &lhs, const Node &rhs) {
+    if(lhs.n == nullptr)
+        return false;
+    return (lhs.n->name != rhs.name ||
+            lhs.n->age != rhs.age);
 }
 
-bool operator==(const node &lhs, const node &rhs) {
-    return (lhs.name == rhs.name &&
-            lhs.age == rhs.age);
+bool operator==(const LinkedListNode &lhs, const Node &rhs) {
+    if(lhs.n == nullptr)
+        return false;
+    return (lhs.n->name == rhs.name &&
+            lhs.n->age == rhs.age);
 }
